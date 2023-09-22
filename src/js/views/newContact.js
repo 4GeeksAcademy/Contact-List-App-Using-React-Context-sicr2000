@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Context } from "../store/appContext";
 
 export const NewContact = () => {
@@ -11,14 +11,23 @@ export const NewContact = () => {
     phone: "",
     address: "",
   });
+  const { id } = useParams();
+  const isEdit = id !== undefined;
 
   return (
     <div className="mx-5">
-      <h1>Nuevo Contacto</h1>
+      <h1>{isEdit ? "Editar Contacto" : "Nuevo Contacto"}</h1>
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          actions.addContact(selectedContact);
+          if (isEdit) {
+            actions.editContact({
+              ...selectedContact,
+              id: id,
+            });
+          } else {
+            actions.addContact(selectedContact);
+          }
           navigate("/");
         }}
       >
